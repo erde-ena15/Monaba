@@ -73,7 +73,7 @@ def scraping_manaba():
   file_path = 'login_info.json'
   if os.path.exists(file_path) :
       with open(file_path, mode ='r') as f :
-        login1 = json.load(f)
+        login1 = json.load(f)py
         USER = login1['USER']
         PASS = login1['PASS']
   else :'''
@@ -291,6 +291,9 @@ while True:
                          case "2":                           
                              iDir = os.path.expanduser('~')
                              folder = tkinter.filedialog.askdirectory(initialdir=iDir)
+                             print(folder)
+                             if folder == "":
+                               continue
                              string = "端末に保存 保存先:" + folder
                              
                          case "3":
