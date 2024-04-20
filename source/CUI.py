@@ -1,8 +1,13 @@
-﻿from ..module import manaba as ma
+﻿import module.manaba as ma
 from IPython.display import display
+import pandas as pd 
+import os
+import tkinter.filedialog
 
+#default値
 save = "1"
 string = "なし"
+folder = None
 
 while True:
     print("----------Manaba-Scheduler_CUI ver.0.9----------")
@@ -16,7 +21,7 @@ while True:
     mode = input("動作モードの番号を入力してください: ")
     match mode:
         case "1":
-            data = ma.scraping_manaba()
+            data = ma.scraping_manaba(save,folder)
             if not data == None :
               df = pd.DataFrame(data)
               display(df)
@@ -25,7 +30,7 @@ while True:
               continue
             break
         case "2":
-            data = ma.scraping_manaba()
+            data = ma.scraping_manaba(save,folder)
             if not data == None :
               df = pd.DataFrame(data)
               filename ='未提出課題.csv'
@@ -35,7 +40,7 @@ while True:
               continue
             break
         case "3":
-            data = ma.scraping_manaba()
+            data = ma.scraping_manaba(save,folder)
             if not data == None :
               #もし過去のファイルがあれば読み込む
               file_path = '未提出課題.csv'
@@ -63,7 +68,7 @@ while True:
               continue
             break
         case "4":
-            data = ma.scraping_manaba()
+            data = ma.scraping_manaba(save,folder)
             if not data == None :
               #もし過去のファイルがあれば読み込む
               file_path = '未提出課題.csv'

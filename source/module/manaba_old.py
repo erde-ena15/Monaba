@@ -1,13 +1,12 @@
 import requests 
 from bs4 import BeautifulSoup 
-import pandas as pd 
 import os 
 import json 
 from getpass import getpass 
 import tkinter.filedialog
 
 #Load = 0でロード, =1でセーブ
-def login_info_manager(Save,Load,User,Pass):
+def login_info_manager(Save,Load,User,Pass,folder):
   match Save:
       case "1":
           pass
@@ -33,9 +32,9 @@ def login_info_manager(Save,Load,User,Pass):
       #case "3":  
           #pass 
 
-def scraping_manaba():
+def scraping_manaba(save,folder):
   #もし、ログイン情報があれば読み込む
-  login = login_info_manager(save,0,None,None)
+  login = login_info_manager(save,0,None,None,folder)
   if not login == None:
     USER = login[0]
     PASS = login[1]
@@ -79,7 +78,7 @@ def scraping_manaba():
     return
   else :
     #ログイン情報を保存
-    login_info_manager(save,1,USER,PASS)
+    login_info_manager(save,1,USER,PASS,folder)
     
     #各要素取得
     types = soup.select('td[class="center"]') #部分一致のため
