@@ -1,5 +1,6 @@
-﻿import module.manaba as ma
+﻿from ..module import manaba as ma
 from IPython.display import display
+
 save = "1"
 string = "なし"
 
