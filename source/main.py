@@ -38,9 +38,7 @@ def main(page: ft.Page):
         #else:
             #error = "ユーザIDまたはパスワードが間違っています。"
             #page.update()
-        
-
-
+    
     def create_view1():      
         #print(data)
         data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
