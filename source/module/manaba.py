@@ -32,15 +32,15 @@ def login_info_manager(Save,Load,User,Pass,folder):
       #case "3":  
           #pass 
 
-def scraping_manaba(save,folder):
+def scraping_manaba(save,USER,PASS,folder):
   #もし、ログイン情報があれば読み込む
-  login = login_info_manager(save,0,None,None,folder)
-  if not login == None:
-    USER = login[0]
-    PASS = login[1]
+  #login = login_info_manager(save,0,None,None,folder)
+  '''if not login == None:
+    
   else:
     USER = input('ユーザーIDを入力してください: ')
     PASS = getpass('パスワードを入力してください: ')
+    '''
 
   url_login = "https://cit.manaba.jp/ct/login"
   session = requests.session()
