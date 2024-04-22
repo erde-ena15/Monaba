@@ -69,7 +69,6 @@ def main(page: ft.Page):
         print(f"{ROWS}")
         return ft.View("/view1",layout)  
 
-
     def route_change(route):
         page.views.clear()
         if page.route == "/":
@@ -86,22 +85,4 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
-
-    '''
-    def button_clicked(e):
-        t2.value = "recomended!"
-        t2.update()
-
-
-    page.title = "Manaba-Scheduler"  # アプリタイトル
-    title = ft.Text(value="Manaba-Scheduler", color="green",size=40,)
-    t1 = ft.Text(value="manabamanabaから未提出課題を出力します")
-    b1 = ft.FilledTonalButton(
-        text="1.表示のみ",
-        icon=ft.icons.RECOMMEND,
-        on_click=button_clicked,
-    )
-    t2 = ft.Text()
-    page.add(title,t1,b1,t2) 
-    '''
 ft.app(target=main,view=ft.AppView.WEB_BROWSER)
