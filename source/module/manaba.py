@@ -1,3 +1,6 @@
+import sys
+sys.path.append('C:\Users\kenta\Documents\GitHub\Manaba-Scheduler\myenv\Lib\site-packages')
+
 import requests 
 from bs4 import BeautifulSoup 
 import os 
