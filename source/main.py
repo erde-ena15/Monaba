@@ -1,7 +1,7 @@
 import flet as ft
 import module.manaba as ma
 import pandas as pd 
-from IPython.display import display
+#from IPython.display import display
 
 #default値
 save = "1"
@@ -85,4 +85,4 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
-ft.app(target=main,view=ft.AppView.WEB_BROWSER)
+ft.app(target=main)
