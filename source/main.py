@@ -1,6 +1,10 @@
+#import sys
+#sys.path.append('C:\Users\kenta\Documents\GitHub\Manaba-Scheduler\source\module')
+#sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
+
 import flet as ft
-import module.manaba as ma
-import pandas as pd 
+from module import manaba as ma
+#import pandas as pd 
 #from IPython.display import display
 
 #default値
@@ -30,11 +34,12 @@ def main(page: ft.Page):
         return ft.View("/",layout)  
     
     def clicked(e):        
+        page.go("/view1")
         #data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
         #if not data == None :
             #df = pd.DataFrame(data)
             #display(df)
-            page.go("/view1")
+            
         #else:
             #error = "ユーザIDまたはパスワードが間違っています。"
             #page.update()
@@ -68,6 +73,7 @@ def main(page: ft.Page):
                  ]
         print(f"{ROWS}")
         return ft.View("/view1",layout)  
+        
 
     def route_change(route):
         page.views.clear()

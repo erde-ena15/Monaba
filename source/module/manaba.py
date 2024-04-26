@@ -1,15 +1,11 @@
-import sys
-sys.path.append('C:\Users\kenta\Documents\GitHub\Manaba-Scheduler\myenv\Lib\site-packages')
-
-import requests 
-from bs4 import BeautifulSoup 
-import os 
-import json 
-from getpass import getpass 
-import tkinter.filedialog
-
 #Load = 0でロード, =1でセーブ
 def login_info_manager(Save,Load,User,Pass,folder):
+  import os 
+  import json 
+  from getpass import getpass 
+  import tkinter.filedialog
+  
+
   match Save:
       case "1":
           pass
@@ -36,6 +32,10 @@ def login_info_manager(Save,Load,User,Pass,folder):
           #pass 
 
 def scraping_manaba(save,USER,PASS,folder):
+  import requests 
+  from bs4 import BeautifulSoup 
+  
+  
   #もし、ログイン情報があれば読み込む
   #login = login_info_manager(save,0,None,None,folder)
   '''if not login == None:
@@ -44,7 +44,7 @@ def scraping_manaba(save,USER,PASS,folder):
     USER = input('ユーザーIDを入力してください: ')
     PASS = getpass('パスワードを入力してください: ')
     '''
-
+  
   url_login = "https://cit.manaba.jp/ct/login"
   session = requests.session()
   res = session.get(url_login)
