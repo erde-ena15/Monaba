@@ -45,6 +45,7 @@ def main(page: ft.Page):
             #page.update()
     
     def create_view1():      
+        '''
         #print(data)
         data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
         ROWS = []
@@ -72,6 +73,9 @@ def main(page: ft.Page):
                     ft.ElevatedButton("Go Home", on_click=lambda _: page.go("/")),               
                  ]
         print(f"{ROWS}")
+        '''
+        layout = [ft.Text(value="てすと！！！！！！"),
+                  ft.ElevatedButton("Go Home", on_click=lambda _: page.go("/")),    ]
         return ft.View("/view1",layout)  
         
 
