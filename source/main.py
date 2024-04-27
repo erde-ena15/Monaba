@@ -36,7 +36,7 @@ def main(page: ft.Page):
     
     def clicked(e):        
         page.go("/view1")
-        data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
+        #data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
         #print(type(data))
         #if not data == None :
             #df = pd.DataFrame(data)
@@ -47,13 +47,13 @@ def main(page: ft.Page):
             #page.update()
     
     def create_view1():      
-        aaa = {"a":{"x":1, "y":55555}, "b":2, "c":3}
+        aaa = [[10,11,12],[20,21,22]]
 
        
         data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
-        #print(data)
-        #print(type(data['タイプ']))
-        #print(type(data['タイプ'][1]))
+       # print(data)
+       # print(type(data[0]))
+      #  print(f"{data[0][1]}")
        # print(type(data['開始日'][1]))
         #print(type(data['終了日'][1]))
         '''
@@ -75,7 +75,7 @@ def main(page: ft.Page):
          '''   
         layout = [                    
                     ft.AppBar(title=ft.Text("未提出課題"), bgcolor=ft.colors.SURFACE_VARIANT),
-                    ft.Text(ft.Text(f"{data[0][0]}")),           
+                    ft.Text(f"{aaa[1][2]}"),           
                     ft.DataTable(
                             columns=[
                                 ft.DataColumn(ft.Text("タイプ")),
@@ -128,9 +128,3 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
     page.go(page.route)
 ft.app(target=main)
-
-
-
-'''
-                    
-                    '''
