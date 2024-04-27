@@ -114,11 +114,19 @@ def scraping_manaba(save,USER,PASS,folder):
       dates_finish_txt.append(date_f.text)
 
     #各要素を2次元配列にまとめる
-    data = {}
+    data = {
+            'タイプ':types_txt,
+            'タイトル':titles_txt,
+            '教科':subjects_txt,
+            '開始日':dates_start_txt,
+            '終了日':dates_finish_txt,
+           }
+    
+    '''
     data['タイプ'] = types_txt
     data['タイトル'] = titles_txt
     data['教科'] = subjects_txt
     data['開始日'] = dates_start_txt
     data['終了日'] = dates_finish_txt
-
+'''
     return data
