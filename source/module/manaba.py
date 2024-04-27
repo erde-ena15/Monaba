@@ -113,15 +113,22 @@ def scraping_manaba(save,USER,PASS,folder):
     for date_f in dates_finish:
       dates_finish_txt.append(date_f.text)
 
-    #各要素を2次元配列にまとめる
-    data = {
-            'タイプ':types_txt,
-            'タイトル':titles_txt,
-            '教科':subjects_txt,
-            '開始日':dates_start_txt,
-            '終了日':dates_finish_txt,
-           }
-    
+    #各要素を2次元辞書にまとめる
+
+    data =[]
+    data.append(types_txt)
+    data.append(titles_txt)
+    data.append(subjects_txt)
+    data.append(dates_start_txt)
+    data.append(dates_finish_txt)
+    '''data = [
+            types_txt,
+            titles_txt,
+            subjects_txt,
+            dates_start_txt,
+            dates_finish_txt,
+          ]     
+    '''
     '''
     data['タイプ'] = types_txt
     data['タイトル'] = titles_txt

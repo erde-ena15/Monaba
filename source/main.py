@@ -37,7 +37,7 @@ def main(page: ft.Page):
     def clicked(e):        
         page.go("/view1")
         data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
-        print(type(data))
+        #print(type(data))
         #if not data == None :
             #df = pd.DataFrame(data)
             #display(df)
@@ -47,13 +47,13 @@ def main(page: ft.Page):
             #page.update()
     
     def create_view1():      
-        aaa = {"a":{"x":1, "y":2}, "b":2, "c":3}
+        aaa = {"a":{"x":1, "y":55555}, "b":2, "c":3}
 
        
         data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
-        print(data)
-        print(type(data['タイプ']))
-        print(type(data['タイプ'][1]))
+        #print(data)
+        #print(type(data['タイプ']))
+        #print(type(data['タイプ'][1]))
        # print(type(data['開始日'][1]))
         #print(type(data['終了日'][1]))
         '''
@@ -75,7 +75,31 @@ def main(page: ft.Page):
          '''   
         layout = [                    
                     ft.AppBar(title=ft.Text("未提出課題"), bgcolor=ft.colors.SURFACE_VARIANT),
-                    ft.Text(f"{data['タイプ'][1]}"),           
+                    ft.Text(ft.Text(f"{data[0][0]}")),           
+                    ft.DataTable(
+                            columns=[
+                                ft.DataColumn(ft.Text("タイプ")),
+                                ft.DataColumn(ft.Text("タイトル")),
+                                ft.DataColumn(ft.Text("開始日")),
+                                ft.DataColumn(ft.Text("終了日")),
+                                    ],
+                            rows= [ft.DataRow(cells = [
+                    ft.DataCell(ft.Text("iiijg")),
+                    ft.DataCell(ft.Text("てすと")),
+                    ft.DataCell(ft.Text("テスト")),
+                    ft.DataCell(ft.Text("1234/")),
+                ])],
+                                ),
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
+                    
                     ft.ElevatedButton("Go Home", on_click=lambda _: page.go("/")),               
                  ]
 
@@ -108,18 +132,5 @@ ft.app(target=main)
 
 
 '''
-                    ft.DataTable(
-                            columns=[
-                                ft.DataColumn(ft.Text("タイプ")),
-                                ft.DataColumn(ft.Text("タイトル")),
-                                ft.DataColumn(ft.Text("開始日")),
-                                ft.DataColumn(ft.Text("終了日")),
-                                    ],
-                            rows= [ft.DataRow(cells = [
-                    ft.DataCell(ft.Text(f"{data['タイプ'][1]}")),
-                    ft.DataCell(ft.Text("てすと")),
-                    ft.DataCell(ft.Text("テスト")),
-                    ft.DataCell(ft.Text("1234/")),
-                ])],
-                                ),
+                    
                     '''
