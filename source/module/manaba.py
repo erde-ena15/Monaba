@@ -1,14 +1,7 @@
-
-  
+import requests 
+from bs4 import BeautifulSoup 
     
 class manaba_tool: 
-  
-
-
-
-
-
-
   def __init__(self,User,Pass):
       self.USER = User
       self.PASS = Pass 
@@ -48,19 +41,6 @@ class manaba_tool:
             #pass 
 '''
   def scraping_manaba(self):
-    import sys
-
-    if sys.platform == "emscripten": # check if run in Pyodide environment
-      import micropip
-      micropip.install("requests")
-      micropip.install("BeautifulSoup4")
-    
-    #sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\source\\module')
-    #sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
-    #sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\myenv\\Lib\\site-packages')
-    import requests 
-    from bs4 import BeautifulSoup 
-    
     #もし、ログイン情報があれば読み込む
     #login = login_info_manager(save,0,None,None,folder)
     '''if not login == None:
@@ -92,9 +72,6 @@ class manaba_tool:
     url_mytask = "https://cit.manaba.jp/ct/home_library_query"
     res = session.get(url_mytask)
     soup = BeautifulSoup(res.text, "html.parser")
-
-    
-
 
     #ログインできたか確認
     error_text = 'default'
@@ -169,7 +146,7 @@ class manaba_tool:
   def test(self):
     
     #import random
-    import requests 
+    
     url = 'https://ai-inter1.com/python-requests/'
     response = requests.get(url)
     
