@@ -3,7 +3,13 @@
 #sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
 
 import flet as ft
-from module import manaba as ma
+import module 
+
+
+
+
+
+
 #import pandas as pd 
 #from IPython.display import display
 
@@ -48,12 +54,13 @@ def main(page: ft.Page):
     
     def create_view1():      
         aaa = [[10,11,12],[20,21,22]]
-
-       
-        data = ma.scraping_manaba(save,USER.value,PASS.value,folder)
+        
+        Userdata = module.manaba.manaba_tool(USER.value,PASS.value)
+        Userdata.scraping_manaba()
+        #data = module.manaba.scraping_manaba(save,USER.value,PASS.value,folder)
        # print(data)
        # print(type(data[0]))
-      #  print(f"{data[0][1]}")
+        #print(f"{data.scraping_manaba()[0][1]}")
        # print(type(data['開始日'][1]))
         #print(type(data['終了日'][1]))
         '''
@@ -84,7 +91,7 @@ def main(page: ft.Page):
                                 ft.DataColumn(ft.Text("終了日")),
                                     ],
                             rows= [ft.DataRow(cells = [
-                    ft.DataCell(ft.Text("iiijg")),
+                    ft.DataCell(ft.Text("a")),
                     ft.DataCell(ft.Text("てすと")),
                     ft.DataCell(ft.Text("テスト")),
                     ft.DataCell(ft.Text("1234/")),
@@ -127,4 +134,5 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
     page.go(page.route)
+    
 ft.app(target=main)
