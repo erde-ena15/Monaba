@@ -1,8 +1,18 @@
+
+  
+    
 class manaba_tool: 
- 
+  
+
+
+
+
+
+
   def __init__(self,User,Pass):
-       self.USER = User
-       self.PASS = Pass 
+      self.USER = User
+      self.PASS = Pass 
+
   '''
   #Load = 0でロード, =1でセーブ
   def login_info_manager(Save,Load,User,Pass,folder):
@@ -36,12 +46,18 @@ class manaba_tool:
                       json.dump(login0, f, ensure_ascii=False)
         #case "3":  
             #pass 
- '''
+'''
   def scraping_manaba(self):
     import sys
-    sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\source\\module')
-    sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
-    sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\myenv\\Lib\\site-packages')
+
+    if sys.platform == "emscripten": # check if run in Pyodide environment
+      import micropip
+      micropip.install("requests")
+      micropip.install("BeautifulSoup4")
+    
+    #sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\source\\module')
+    #sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
+    #sys.path.append('C:\\Users\\kenta\\Documents\\GitHub\\Manaba-Scheduler\\myenv\\Lib\\site-packages')
     import requests 
     from bs4 import BeautifulSoup 
     
@@ -150,5 +166,15 @@ class manaba_tool:
   '''
       return data
     
-  def test(a,b):
-    return a + b
+  def test(self):
+    
+    #import random
+    import requests 
+    url = 'https://ai-inter1.com/python-requests/'
+    response = requests.get(url)
+    
+    #x = random.random()
+    return response
+
+if __name__ == "__main__":
+  print("this ia a modlule")

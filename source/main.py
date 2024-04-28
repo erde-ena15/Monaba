@@ -1,3 +1,10 @@
+
+    
+
+
+
+
+
 #import sys
 #sys.path.append('C:\Users\kenta\Documents\GitHub\Manaba-Scheduler\source\module')
 #sys.path.append('C:\\Users\\kenta\\AppData\\Local\\Temp\\serious_python*')
@@ -18,6 +25,8 @@ save = "1"
 folder = None
 
 def main(page: ft.Page):
+    
+    
     page.title = "Routes Example"
     a = [["aaa","bbb"],["ccc","ddd"]]
     USER = ft.TextField(label="ユーザーID")
@@ -56,7 +65,8 @@ def main(page: ft.Page):
         aaa = [[10,11,12],[20,21,22]]
         
         Userdata = module.manaba.manaba_tool(USER.value,PASS.value)
-        Userdata.scraping_manaba()
+        X = Userdata.test()
+        print(type(X))
         #data = module.manaba.scraping_manaba(save,USER.value,PASS.value,folder)
        # print(data)
        # print(type(data[0]))
@@ -82,7 +92,7 @@ def main(page: ft.Page):
          '''   
         layout = [                    
                     ft.AppBar(title=ft.Text("未提出課題"), bgcolor=ft.colors.SURFACE_VARIANT),
-                    ft.Text(f"{aaa[1][2]}"),           
+                    ft.Text(f"{X}"),           
                     ft.DataTable(
                             columns=[
                                 ft.DataColumn(ft.Text("タイプ")),
@@ -91,7 +101,7 @@ def main(page: ft.Page):
                                 ft.DataColumn(ft.Text("終了日")),
                                     ],
                             rows= [ft.DataRow(cells = [
-                    ft.DataCell(ft.Text("a")),
+                    ft.DataCell(ft.Text(f"{X}")),
                     ft.DataCell(ft.Text("てすと")),
                     ft.DataCell(ft.Text("テスト")),
                     ft.DataCell(ft.Text("1234/")),
