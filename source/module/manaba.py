@@ -1,10 +1,14 @@
 import requests 
 from bs4 import BeautifulSoup 
-    
+
+if __name__ == "__main__":
+  print("this ia a modlule")
+
 class manaba_tool: 
-  def __init__(self,User,Pass):
+  def __init__(self,User=None,Pass=None,Soup=None):
       self.USER = User
       self.PASS = Pass 
+      self.SOUP = Soup
 
   '''
   #Load = 0でロード, =1でセーブ
@@ -40,7 +44,10 @@ class manaba_tool:
         #case "3":  
             #pass 
 '''
-  def scraping_manaba(self):
+  
+  
+  def login_manaba(self):
+    print()
     #もし、ログイン情報があれば読み込む
     #login = login_info_manager(save,0,None,None,folder)
     '''if not login == None:
@@ -49,6 +56,7 @@ class manaba_tool:
       USER = input('ユーザーIDを入力してください: ')
       PASS = getpass('パスワードを入力してください: ')
       '''
+    
     
     url_login = "https://cit.manaba.jp/ct/login"
     session = requests.session()
@@ -71,28 +79,33 @@ class manaba_tool:
 
     url_mytask = "https://cit.manaba.jp/ct/home_library_query"
     res = session.get(url_mytask)
-    soup = BeautifulSoup(res.text, "html.parser")
+    self.SOUP = BeautifulSoup(res.text, "html.parser")
 
     #ログインできたか確認
     error_text = 'default'
-    error = soup.find('ul', class_ ='errmsg')
+    error = self.SOUP.find('ul', class_ ='errmsg')
     if not error :
-      pass
-    else :
-      error_text = error.text
-    search_text = 'manabaの認証が必要です'
-    if search_text in error_text :
-      print('ユーザIDまたはパスワードが間違っています。')
-      return
-    else :
+      print('ログインに成功')
+      return self.SOUP
       #ログイン情報を保存
       #login_info_manager(save,1,USER,PASS,folder)
-      
+    else :
+      #エラーの原因調査
+      error_text = error.text
+      search_text = 'manabaの認証が必要です'
+      if search_text in error_text :
+        print('ユーザIDまたはパスワードが間違っています')
+        return -1
+      else :
+         print('その他のエラー') 
+         return -2
+
+  def scraping_manaba(self): 
       #各要素取得
-      types = soup.select('td[class="center"]') #部分一致のため
-      titles = soup.find_all('div', class_='myassignments-title')
-      subjects = soup.find_all('div', class_='mycourse-title')
-      dates = soup.find_all('td', class_='center td-period')
+      types = self.SOUP.select('td[class="center"]') #部分一致のため
+      titles = self.SOUP.find_all('div', class_='myassignments-title')
+      subjects = self.SOUP.find_all('div', class_='mycourse-title')
+      dates = self.SOUP.find_all('td', class_='center td-period')
       dates_start = []
       dates_finish = []
       for count, dat in enumerate(dates):
@@ -142,7 +155,7 @@ class manaba_tool:
       data['終了日'] = dates_finish_txt
   '''
       return data
-    
+      
   def test(self):
     
     #import random
@@ -152,6 +165,5 @@ class manaba_tool:
     
     #x = random.random()
     return response
-
-if __name__ == "__main__":
-  print("this ia a modlule")
+  
+  

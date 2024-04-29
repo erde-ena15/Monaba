@@ -2,3 +2,6 @@ requests
 BeautifulSoup4
 pandas
 flet
+
+
+flet build apk --project ManabaViewer --product ManabaViewer --org ManabaViewer --build-number 101 --build-version 1.0.1
