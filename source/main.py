@@ -13,7 +13,16 @@ def main(page: ft.Page):
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
     mobile = False
+
+    def load_setting():
+        setting = {}
+        setting['USER'] = page.client_storage.get("SaveUser")    
+        setting['PASS'] = page.client_storage.get("SavePass")
+        setting['ISSAVE'] = page.client_storage.get("SaveIsSave")
+        return setting
     
+    SETTING = load_setting()
+        
     def mobile_change(e):
         nonlocal mobile 
         if CHECKBOX.value == True:
@@ -28,6 +37,9 @@ def main(page: ft.Page):
     
     
     def create_home():      
+        
+        print(f"{SETTING['USER']}")
+        print(f"{SETTING['PASS']}")
         layout = [
                     ft.Text(""),
                     ft.Text(value="ManabaViewer", color="green",size=40,weight="BOLD"),
@@ -41,21 +53,34 @@ def main(page: ft.Page):
                  ]
         return ft.View("/",layout)  
     
-    def login_clicked(e):        
+    def login_clicked(e):            
+        if SETTING["USER"]:
+           USER.value = SETTING["USER"] 
+           PASS.value = SETTING["PASS"]
         Userdata = module.manaba.manaba_tool(USER.value,PASS.value)
         nonlocal result
         result = Userdata.login_manaba()
         del Userdata
         if result == -1: 
-          ERROR.value = "ユーザIDまたはパスワードが間違っています"
-          page.update()
+            ERROR.value = "ユーザIDまたはパスワードが間違っています"
+            if page.route == "/":
+                page.update()
+            else :
+                page.go("/")
         elif result == -2:
-          ERROR.value = "その他のエラーです"
-          page.update()
+            ERROR.value = "その他のエラーです"
+            if page.route == "/":
+                page.update()
+            else :
+                page.go("/")
         else:
-          ERROR.value = ""
-          page.update()
-          page.go("/view1")
+            #ログイン情報の保存
+            page.client_storage.set("SaveUser",USER.value) 
+            page.client_storage.set("SavePass",PASS.value)  
+            ERROR.value = ""
+            page.update()
+            page.go("/task")
+
     
     
 
@@ -125,9 +150,14 @@ def main(page: ft.Page):
 
     def route_change(route):
         page.views.clear()
+        nonlocal SETTING
+        SETTING = load_setting()
         if page.route == "/":
-            page.views.append(create_home())    
-        if page.route == "/view1":
+            if SETTING["USER"] and SETTING["PASS"]:  
+                login_clicked(None)
+                return
+            page.views.append(create_home())           
+        if page.route == "/task":
             page.views.append(create_task())
         page.update()
    

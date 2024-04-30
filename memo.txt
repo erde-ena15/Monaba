@@ -5,3 +5,5 @@ flet
 
 
 flet build apk --project ManabaViewer --product ManabaViewer --org ManabaViewer --build-number 101 --build-version 1.0.1
+
+flet pack -i assets\icon.png -n ManabaViewer -D --product-name ManabaViewer --product-version 1.0.1 --file-version 1.0.1
