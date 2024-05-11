@@ -10,53 +10,7 @@ class manaba_tool:
       self.PASS = Pass 
       self.SOUP = Soup
 
-  '''
-  #Load = 0でロード, =1でセーブ
-  def login_info_manager(Save,Load,User,Pass,folder):
-    import os 
-    import json 
-    from getpass import getpass 
-    import tkinter.filedialog
-    
-
-    match Save:
-        case "1":
-            pass
-        case "2":
-            match Load:
-                case 0:
-                    fTyp = [("","login_info.json")]
-                    iDir = os.path.expanduser('~')
-                    file_path = tkinter.filedialog.askopenfilename(filetypes=fTyp, initialdir=iDir)
-                    if os.path.exists(file_path) :
-                      with open(file_path, mode ='r') as f :
-                          login1 = json.load(f)
-                          USER = login1['USER']
-                          PASS = login1['PASS']
-                          return USER,PASS
-                    else :
-                      print('ファイルが存在しない、もしくは見つかりません')
-                case 1:               
-                    login0 = {'USER': User, 'PASS': Pass}
-                    path = folder + '/login_info.json'
-                    with open(path, mode='w') as f:
-                      json.dump(login0, f, ensure_ascii=False)
-        #case "3":  
-            #pass 
-'''
-  
-  
   def login_manaba(self):
-    print()
-    #もし、ログイン情報があれば読み込む
-    #login = login_info_manager(save,0,None,None,folder)
-    '''if not login == None:
-      
-    else:
-      USER = input('ユーザーIDを入力してください: ')
-      PASS = getpass('パスワードを入力してください: ')
-      '''
-    
     
     url_login = "https://cit.manaba.jp/ct/login"
     session = requests.session()
@@ -87,8 +41,6 @@ class manaba_tool:
     if not error :
       print('ログインに成功')
       return self.SOUP
-      #ログイン情報を保存
-      #login_info_manager(save,1,USER,PASS,folder)
     else :
       #エラーの原因調査
       error_text = error.text
@@ -155,15 +107,4 @@ class manaba_tool:
       data['終了日'] = dates_finish_txt
   '''
       return data
-      
-  def test(self):
-    
-    #import random
-    
-    url = 'https://ai-inter1.com/python-requests/'
-    response = requests.get(url)
-    
-    #x = random.random()
-    return response
-  
   
