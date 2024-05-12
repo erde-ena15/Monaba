@@ -6,13 +6,14 @@ import time
 
 def main(page: ft.Page):   
     page.title = "Monaba"
-    version = "1.1.0"
+    version = "1.1.1"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
     page.theme = ft.Theme(color_scheme_seed="green")
-    time.sleep(0.5)
+    time.sleep(0.4)
     SETTING = {'USER':None,'PASS':None,'MOBILE':None,'ISSAVE':False}
+    temp ={'USER':None,'PASS':None}
     
     def load_setting():
         nonlocal SETTING
@@ -22,7 +23,6 @@ def main(page: ft.Page):
         SETTING['ISSAVE'] = page.client_storage.get("IsSave")
 
     load_setting()
-    #mo = page.client_storage.get("Mobile")
     if sys.platform == "linux" and SETTING['MOBILE'] == None:     
         SETTING['MOBILE'] = True
         page.client_storage.set("Mobile",SETTING['MOBILE'])
@@ -57,23 +57,33 @@ def main(page: ft.Page):
         else:
             SETTING['MOBILE'] = False
         page.client_storage.set("Mobile",SETTING['MOBILE'])
-     
-    
-    
+        #再読み込み対策
+        time.sleep(0.2)
+        page.views.clear()
+        load_setting()
+        page.views.append(create_setting())
+        page.update()
+        
     CHECKBOX = ft.Checkbox(label="   モバイル表示", value=SETTING['MOBILE'],on_change=mobile_change) 
     result = None
     
     def auto_login_change(e):
         nonlocal SETTING
-        if auto_login_switch.value == True:
+        if auto_login_switch.value == True and temp["USER"]:
             SETTING['ISSAVE'] = True
+            page.client_storage.set("SaveUser",temp["USER"]) 
+            page.client_storage.set("SavePass",temp["PASS"])  
         else:
             SETTING['ISSAVE'] = False
             page.client_storage.remove("SaveUser")
             page.client_storage.remove("SavePass")
-            SETTING['USER'] = None   
-            SETTING['PASS'] = None
         page.client_storage.set("IsSave",SETTING['ISSAVE'])
+        #再読み込み対策
+        time.sleep(0.2)
+        page.views.clear()
+        load_setting()
+        page.views.append(create_setting())
+        page.update()
        
     auto_login_switch = ft.Switch(label="自動ログイン", value=SETTING['ISSAVE'],on_change=auto_login_change)
 
@@ -107,7 +117,7 @@ def main(page: ft.Page):
         dlg_modal.open = True
         nonlocal SETTING 
         page.update()
-        if SETTING["USER"]:
+        if SETTING["USER"] and SETTING["ISSAVE"] == True:
            USER.value = SETTING["USER"] 
            PASS.value = SETTING["PASS"]
         Userdata = module.manaba.manaba_tool(USER.value,PASS.value)
@@ -131,10 +141,9 @@ def main(page: ft.Page):
                 page.go("/")
             return -2
         else:
-            #ログイン情報の保存
-            if page.client_storage.contains_key("SaveUser") == False and SETTING['ISSAVE'] == True:
-                page.client_storage.set("SaveUser",USER.value) 
-                page.client_storage.set("SavePass",PASS.value)  
+            #ログイン情報の一時保存
+            temp["USER"] = USER.value
+            temp["PASS"] = PASS.value
             USER.value = None
             PASS.value = None
             ERROR.value = ""
@@ -216,7 +225,6 @@ def main(page: ft.Page):
                     ft.Text(""),
                     ft.Row([auto_login_switch,ft.Text(""),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     ft.Row([ft.Text("         ログイン情報を端末のローカルに保存します",size=12),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
-                    ft.Row([ft.Text("        次回のログイン完了後から有効化されます",size=12),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND), 
                     ft.Row([CHECKBOX,ft.Text(""),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     ft.Text(""),ft.Text(""),
                     ft.Text(""),ft.Text(""),
@@ -259,7 +267,7 @@ def main(page: ft.Page):
                 return
             PAGE=create_task()
             while PAGE == None:
-                time.sleep(0.5)
+                time.sleep(0.4)
             dlg_modal.open = False
             Navi.selected_index = 0
             page.views.append(PAGE)
@@ -267,11 +275,9 @@ def main(page: ft.Page):
         if page.route == "/setting":
             Navi.selected_index = 1
             page.views.append(create_setting())
-        
-          
+              
         page.update()
-
-   
+ 
     def view_pop(view):
         page.views.pop()
         top_view = page.views[-1]
