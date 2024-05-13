@@ -6,7 +6,7 @@ import time
 
 def main(page: ft.Page):   
     page.title = "Monaba"
-    version = "1.1.1"
+    version = "1.1.2"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
@@ -273,6 +273,10 @@ def main(page: ft.Page):
             page.views.append(PAGE)
             print("データ取得完了")
         if page.route == "/setting":
+            if not result:
+                print("resultが存在しません.トップに戻ります")
+                page.go("/")
+                return
             Navi.selected_index = 1
             page.views.append(create_setting())
               
