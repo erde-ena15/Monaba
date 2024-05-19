@@ -1,3 +1,4 @@
+import urllib.parse
 import requests 
 from bs4 import BeautifulSoup 
 
@@ -5,42 +6,27 @@ if __name__ == "__main__":
   print("this ia a modlule")
 
 class manaba_tool: 
-  def __init__(self,User=None,Pass=None,Soup=None):
+  def __init__(self,User=None,Pass=None,
+               url_mytask="https://cit.manaba.jp/ct/home_library_query",
+               url_login = "https://cit.manaba.jp/ct/login",
+               ):
       self.USER = User
       self.PASS = Pass 
-      self.SOUP = Soup
-
-  def login_manaba(self):
-    
-    url_login = "https://cit.manaba.jp/ct/login"
-    session = requests.session()
-    res = session.get(url_login)
-    soup = BeautifulSoup(res.text, 'html.parser')
-    SessionValue1 = soup.find(attrs={'name':'SessionValue1'}).get('value')
-    cookie = res.cookies
-
-    #ログイン情報
-    login_info = {
-      'userid':self.USER,
-      'password':self.PASS,
-      'login':"ログイン",
-      "manaba-form":"1",
-      "SessionValue1":SessionValue1
-    }
-
-    # post時にcookieを追加
-    login = session.post(url_login, data=login_info, cookies=cookie)
-
-    url_mytask = "https://cit.manaba.jp/ct/home_library_query"
-    res = session.get(url_mytask)
-    self.SOUP = BeautifulSoup(res.text, "html.parser")
-
+      self.session = requests.session()
+      self.url_login = url_login
+      self.url_mytask = url_mytask
+      self.SOUP = None
+      self.types_txt = None
+      self.urls = None
+      
+  def check_login(self,sp=None):
     #ログインできたか確認
-    error_text = 'default'
-    error = self.SOUP.find('ul', class_ ='errmsg')
+    if sp == None:
+      sp = self.SOUP
+    error = sp.find('ul', class_ ='errmsg')
     if not error :
       print('ログインに成功')
-      return self.SOUP
+      return 0
     else :
       #エラーの原因調査
       error_text = error.text
@@ -51,7 +37,26 @@ class manaba_tool:
       else :
          print('その他のエラー') 
          return -2
-
+    
+  def login_manaba(self):
+    res = self.session.get(self.url_login)
+    soup = BeautifulSoup(res.text, 'html.parser')
+    SessionValue1 = soup.find(attrs={'name':'SessionValue1'}).get('value')
+    cookie = res.cookies
+    #ログイン情報
+    login_info = {
+      'userid':self.USER,
+      'password':self.PASS,
+      'login':"ログイン",
+      "manaba-form":"1",
+      "SessionValue1":SessionValue1
+    }
+    # post時にcookieを追加
+    login = self.session.post(self.url_login, data=login_info, cookies=cookie) 
+    res = self.session.get(self.url_mytask)
+    self.SOUP = BeautifulSoup(res.text, "html.parser")
+    return self.check_login()
+      
   def scraping_manaba(self): 
       #各要素取得
       types = self.SOUP.select('td[class="center"]') #部分一致のため
@@ -65,11 +70,19 @@ class manaba_tool:
           dates_start.append(dat)
         else:
           dates_finish.append(dat)
-
+      #myassignments-titleクラスを取得
+      title_classes = self.SOUP.find_all(class_="myassignments-title")
+      self.urls =[]
+      #find_allが使えないためfor文
+      for title_class in title_classes:
+        tag_a = title_class.find('a') #aタグのみ
+        href = tag_a.get("href") #href属性のみ
+        add_url = urllib.parse.urljoin(self.url_mytask,href)
+        self.urls.append(add_url)
       #タグなどを取り除く
-      types_txt =[]
+      self.types_txt =[]
       for type_ in types:
-        types_txt.append(type_.text)
+        self.types_txt.append(type_.text)
       titles_txt = []
       for title in titles:
         titles_txt.append(title.text.replace('\n',''))
@@ -82,15 +95,19 @@ class manaba_tool:
       dates_finish_txt=[]
       for date_f in dates_finish:
         dates_finish_txt.append(date_f.text)
+      #urls_txt =[]
+      #for url in urls:
+        #urls_txt.append(url.text)
 
-      #各要素を2次元辞書にまとめる
-
+      #各要素を2次元辞書,タプルにまとめる
       data =[]
-      data.append(types_txt)
+      data.append(self.types_txt)
       data.append(titles_txt)
       data.append(subjects_txt)
       data.append(dates_start_txt)
       data.append(dates_finish_txt)
+      data.append(self.urls)
+      
       '''data = [
               types_txt,
               titles_txt,
@@ -108,3 +125,15 @@ class manaba_tool:
   '''
       return data
   
+  def scraping_detail(self,number):
+    res = self.session.get(self.urls[number])
+    SOUP = BeautifulSoup(res.text, "html.parser")
+    detail = SOUP.find('td', class_='left')
+    if self.check_login(sp=SOUP) == -1 or self.check_login(sp=SOUP) == -2:
+      print('セッションが切れています')
+      return -1
+    de = detail.text
+    if de.isspace() == True or self.types_txt[number] == "アンケート":
+      de = "詳細内容はありません"
+    return de
+    
