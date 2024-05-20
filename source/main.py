@@ -9,7 +9,7 @@ def main(page: ft.Page):
     time.sleep(0.4)
     #global
     page.title = "Monaba"
-    version = "1.2.0"
+    version = "1.2.3"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
@@ -354,4 +354,4 @@ def main(page: ft.Page):
     page.update()
     page.go(page.route)
     
-ft.app(target=main,assets_dir="assets")
+ft.app(target=main,assets_dir="assets",name="Monaba")
