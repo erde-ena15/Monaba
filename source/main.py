@@ -9,7 +9,7 @@ def main(page: ft.Page):
     time.sleep(0.4)
     #global
     page.title = "Monaba"
-    version = "1.2.3"
+    version = "1.2.4"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
@@ -111,7 +111,7 @@ def main(page: ft.Page):
         return ft.View("/",layout)
     
  #ft.Row([],alignment=ft.MainAxisAlignment.CENTER),
-   
+  
     def login_clicked(e):            
         page.dialog = dlg_modal
         dlg_modal.open = True
@@ -147,7 +147,7 @@ def main(page: ft.Page):
             USER.value = None
             PASS.value = None
             ERROR.value = ""
-            dlg_modal.open = False
+            #dlg_modal.open = False
             page.update()
             page.go("/task")
             
@@ -231,7 +231,7 @@ def main(page: ft.Page):
             
         return ft.View("/task",layout,scroll = "ALWAYS") 
 
-    def create_loading(e):
+    def create_loading():
         return ft.View("/loading")
     
     def create_setting():      
@@ -256,15 +256,22 @@ def main(page: ft.Page):
     def create_detail():      
         def task_button(e):
             page.go("/task")
+        
+        if page.platform_brightness.name == "DARK":
+            color = ft.colors.with_opacity(0.05, "#006000")
+        else:
+            color = ft.colors.GREEN_50
 
         if SETTING['MOBILE'] == True:
+            
             layout = [
                     ft.AppBar(title = ft.Text("詳細内容"), bgcolor=ft.colors.SURFACE_VARIANT), 
-                    ft.Column([ft.Container(
+                    ft.Column([ ft.Text(""),
+                                ft.Container(
                                             content=ft.Text(value=detail),
                                             margin=2,
                                             padding=15,
-                                            bgcolor=ft.colors.GREEN_50,
+                                            bgcolor=color,
                                             alignment=ft.alignment.center,
                                             border_radius=10
                                             ),
@@ -276,14 +283,15 @@ def main(page: ft.Page):
         else:
             layout = [
                     ft.AppBar(title = ft.Text("詳細内容"), bgcolor=ft.colors.SURFACE_VARIANT), 
-                    ft.Column([ft.Container(
+                    ft.Column([ ft.Text(""),
+                                ft.Row([ft.Container(
                                             content=ft.Text(value=detail),
                                             margin=2,
                                             padding=15,
-                                            bgcolor=ft.colors.GREEN_50,
+                                            bgcolor=color,
                                             alignment=ft.alignment.center,
                                             border_radius=10
-                                            ),
+                                            )],alignment=ft.MainAxisAlignment.CENTER),
                                 ft.Row([ft.ElevatedButton("戻る", on_click=task_button)],alignment=ft.MainAxisAlignment.CENTER),
                                 ft.Text("")],
                     spacing=15),
@@ -308,11 +316,11 @@ def main(page: ft.Page):
                 return
             dlg_title.value = "ログイン中です"
             page.views.append(create_home())
-            dlg_modal.open = False          
+            #dlg_modal.open = False          
         if page.route == "/loading":
              page.views.append(create_loading())
              page.dialog = dlg_modal
-             dlg_modal.open = True
+             #dlg_modal.open = True
         if page.route == "/task":
             if not Userdata:
                 print("userdataが存在しません.トップに戻ります")
@@ -322,10 +330,14 @@ def main(page: ft.Page):
                 print("resultが存在しません.トップに戻ります")
                 page.go("/")
                 return
+            page.dialog = dlg_modal
+            dlg_modal.open = True
             PAGE=create_task()
+            """
             while PAGE == None:
                 time.sleep(0.4)
-            dlg_modal.open = False
+            #dlg_modal.open = False
+            """
             Navi.selected_index = 0
             page.views.append(PAGE)
             print("データ取得完了")
@@ -338,9 +350,11 @@ def main(page: ft.Page):
             page.views.append(create_setting())
         if page.route == "/detail":
             PAGE=create_detail()
+            """
             while PAGE == None:
                 time.sleep(0.4)
             dlg_modal.open = False
+            """
             page.views.append(PAGE)
         page.update()
  
@@ -354,4 +368,4 @@ def main(page: ft.Page):
     page.update()
     page.go(page.route)
     
-ft.app(target=main,assets_dir="assets",name="Monaba")
+ft.app(target=main,assets_dir="assets")
