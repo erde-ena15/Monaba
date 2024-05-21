@@ -9,7 +9,7 @@ def main(page: ft.Page):
     time.sleep(0.4)
     #global
     page.title = "Monaba"
-    version = "1.2.4"
+    version = "1.2.6"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
@@ -97,18 +97,36 @@ def main(page: ft.Page):
     
     def create_home():      
         nonlocal SETTING
+        if sys.platform == "linux":
+            wid = 275
+        else:
+            wid = 475
+        des1 = ft.Text("本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました",width=wid,
+                            size=11)
+        des2 = ft.Text("現在、千葉工業大学のみ対応しています",width=wid,
+                            size=11)
+        #des2 = ft.Text("スマートフォンでも快適に使えるようにすることを目標に作られました",size=11)
         layout = [
-                    ft.Text(""),
-                    ft.Row([ft.Text(value="Monaba", color="green",size=40,weight="BOLD")],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Column([
+                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Row([ft.Image(src=f"/icon.png",width=50,height=50),
+                                     ft.Text(value="Monaba", color="green",size=40,weight="BOLD"),ft.Text("          ")],alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ft.Text(value="manabaから未提出課題を出力します")],alignment=ft.MainAxisAlignment.CENTER),
                     ft.Row([ERROR],alignment=ft.MainAxisAlignment.CENTER),     
                     ft.Row([USER],alignment=ft.MainAxisAlignment.CENTER), 
                     ft.Row([PASS],alignment=ft.MainAxisAlignment.CENTER),      
                     ft.Row([CHECKBOX,ft.ElevatedButton("ログイン", on_click=login_clicked)],alignment=ft.MainAxisAlignment.CENTER),     
-                    ft.Row([ft.Text(value=f"                                              platform: {sys.platform}  ver.{version}")],alignment=ft.MainAxisAlignment.SPACE_AROUND)
-                               
+                    ft.Row([ft.Text(value=f"                                              platform: {sys.platform}  ver.{version}")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
+                    ft.Text(""),
+                    ft.Row([des1],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Row([des2],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text("contact:erde.ena15@gmail.com"),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Row([ft.Text("© erde.ena15  2024")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ])     
                  ]
-        return ft.View("/",layout)
+        return ft.View("/",layout,scroll = "HIDDEN")
     
  #ft.Row([],alignment=ft.MainAxisAlignment.CENTER),
   
@@ -147,16 +165,20 @@ def main(page: ft.Page):
             USER.value = None
             PASS.value = None
             ERROR.value = ""
-            #dlg_modal.open = False
+            dlg_modal.open = False
             page.update()
             page.go("/task")
             
     def create_task():      
         
         def get_detail(e):
+            dlg_title.value = "loading"
+            page.dialog = dlg_modal
+            dlg_modal.open = True
             search = e.control.data
             nonlocal detail
             detail = Userdata.scraping_detail(number=search)
+            dlg_modal.open = False
             if detail == -1:
                 ERROR.value = "セッション切れのため再ログインが必要です"
                 page.go("/")
@@ -229,7 +251,7 @@ def main(page: ft.Page):
                         Navi,               
                     ]
             
-        return ft.View("/task",layout,scroll = "ALWAYS") 
+        return ft.View("/task",layout,scroll = "HIDDEN") 
 
     def create_loading():
         return ft.View("/loading")
@@ -297,7 +319,7 @@ def main(page: ft.Page):
                     spacing=15),
                     Navi,   
                     ]
-        return ft.View("/detail",layout,scroll = "ALWAYS")
+        return ft.View("/detail",layout,scroll = "HIDDEN")
 
     def route_change(route):
         page.views.clear()
@@ -306,7 +328,7 @@ def main(page: ft.Page):
         if page.route == "/":
             if SETTING["USER"] and SETTING["PASS"] and SETTING['ISSAVE']==True:  
                 print('自動ログインを実行')
-                dlg_title.value = "自動ログイン中"
+                dlg_title.value = "loading"
                 page.go("/loading")
                 A = login_clicked(None)
                 #自動ログインに失敗したら,保存されている値を削除
@@ -315,12 +337,11 @@ def main(page: ft.Page):
                     page.client_storage.remove("SavePass")
                 return
             dlg_title.value = "ログイン中です"
-            page.views.append(create_home())
-            #dlg_modal.open = False          
-        if page.route == "/loading":
-             page.views.append(create_loading())
+            page.views.append(create_home())      
+        if page.route == "/loading": #ダイアログが表示されない場合
+             page.views.append(create_loading()) #pageがない場合必要かも？(自動ログイン時等)
              page.dialog = dlg_modal
-             #dlg_modal.open = True
+             dlg_modal.open = True
         if page.route == "/task":
             if not Userdata:
                 print("userdataが存在しません.トップに戻ります")
@@ -330,14 +351,7 @@ def main(page: ft.Page):
                 print("resultが存在しません.トップに戻ります")
                 page.go("/")
                 return
-            page.dialog = dlg_modal
-            dlg_modal.open = True
             PAGE=create_task()
-            """
-            while PAGE == None:
-                time.sleep(0.4)
-            #dlg_modal.open = False
-            """
             Navi.selected_index = 0
             page.views.append(PAGE)
             print("データ取得完了")
@@ -350,11 +364,6 @@ def main(page: ft.Page):
             page.views.append(create_setting())
         if page.route == "/detail":
             PAGE=create_detail()
-            """
-            while PAGE == None:
-                time.sleep(0.4)
-            dlg_modal.open = False
-            """
             page.views.append(PAGE)
         page.update()
  
@@ -368,4 +377,4 @@ def main(page: ft.Page):
     page.update()
     page.go(page.route)
     
-ft.app(target=main,view=ft.WEB_BROWSER,assets_dir="assets")
+ft.app(target=main,assets_dir="assets")
