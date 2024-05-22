@@ -1,0 +1,10 @@
+{
+    "name": "testapp1",
+    "short_name": "testapp1",
+    "start_url": ".",
+    "display": "standalone",
+    "description": "test123456789",
+    "orientation": "natural",
+    "prefer_related_applications": false
+  }
+  

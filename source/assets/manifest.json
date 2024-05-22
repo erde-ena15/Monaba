@@ -1,9 +1,9 @@
 {
-    "name": "Monaba",
-    "short_name": "Monaba",
+    "name": "testapp1",
+    "short_name": "testapp1",
     "start_url": ".",
     "display": "standalone",
-    "description": "manabaから未提出課題を出力します",
+    "description": "test123456789",
     "orientation": "natural",
     "prefer_related_applications": false
   }
