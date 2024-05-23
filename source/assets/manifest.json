@@ -1,34 +1,7 @@
 {
     "name": "Monaba",
     "short_name": "Monaba",
-    "start_url": ".",
-    "display": "standalone",
     "description": "manabaから未提出課題を出力します",
     "theme_color": "#09A600",
-    "background_color": "#E5FBE0",
-    "orientation": "natural",
-    "prefer_related_applications": false,
-    "icons": [
-      {
-        "src": "icons/icon-192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-maskable-192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "maskable"
-      },
-      {
-        "src": "icons/icon-maskable-512.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "maskable"
-      }]
+    "background_color": "#E5FBE0"
   }
