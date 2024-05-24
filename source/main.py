@@ -9,7 +9,7 @@ def main(page: ft.Page):
     time.sleep(0.4)
     #global
     page.title = "Monaba"
-    version = "1.2.6"
+    version = "1.2.7"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
