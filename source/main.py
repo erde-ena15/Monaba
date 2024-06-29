@@ -108,7 +108,7 @@ def main(page: ft.Page):
                     ft.Column([
                     ft.Text(""),
                     ft.Text(""),
-                    ft.Row([ft.Image(src="./icon.png",width=50,height=50),
+                    ft.Row([ft.Image(src=f"./splash.png",width=50,height=50),
                             ft.Text(value="Monaba", color="green",size=40,weight="BOLD"),ft.Text("          ")],alignment=ft.MainAxisAlignment.CENTER),
                     ft.Container(content=ft.Text("manabaから未提出課題を出力します"),margin=15,alignment=ft.alignment.center),
                     ft.Row([ERROR],alignment=ft.MainAxisAlignment.CENTER),     
