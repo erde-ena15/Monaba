@@ -1,6 +1,6 @@
 {
-    "name": "testtest",
-    "short_name": "testtest",
+    "name": "Monaba",
+    "short_name": "Monaba",
     "start_url": ".",
     "scope": ".",
     "display": "standalone",

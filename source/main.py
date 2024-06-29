@@ -2,6 +2,7 @@ import flet as ft
 import module 
 import sys
 import time
+import datetime
 #import pandas as pd 
 
 def main(page: ft.Page):   
@@ -9,21 +10,41 @@ def main(page: ft.Page):
     time.sleep(0.4)
     #global
     page.title = "Monaba"
-    version = "1.2.7"
+    version = "1.2.8"
     USER = ft.TextField(label="ユーザーID")
     PASS = ft.TextField(label="パスワード", password=True, can_reveal_password=True)
     ERROR = ft.Text("",color='RED')
     SETTING = {'USER':None,'PASS':None,'MOBILE':None,'ISSAVE':False}
     temp ={'USER':None,'PASS':None}
+
+    if page.platform_brightness.name == "DARK":
+            Color = ft.colors.with_opacity(0.05, "#007000")
+            Bgcolor = ft.colors.with_opacity(1.00, "#001800")
+            N1color = ft.colors.with_opacity(1.00, "#6AE860")
+            N2color = ft.colors.with_opacity(1.00, "#002300")
+    else:
+        Color = ft.colors.GREEN_50
+        Bgcolor = ft.colors.GREEN_100
+        N1color="green_accent_700",
+        N2color = ft.colors.GREEN_100
+
     dlg_title=ft.Text("")
     dlg_modal = ft.AlertDialog(
                                 modal=True,
                                 title=dlg_title,
-                                content= ft.ProgressBar(width=400, color="amber", bgcolor="#eeeeee"),
+                                content= ft.ProgressBar(width=400, color=N1color, bgcolor=ft.colors.GREEN_50,),
+                                bgcolor=N2color
                                 ) 
-    
     Userdata = None
     detail = None
+    
+    def reload():
+        #再読み込み対策
+        time.sleep(0.2)
+        page.views.clear()
+        load_setting()
+        page.views.append(create_setting())
+        page.update()
 
     def load_setting():
         nonlocal SETTING
@@ -45,16 +66,10 @@ def main(page: ft.Page):
 
     Navi=ft.NavigationBar(
         destinations=[
-            ft.NavigationDestination(icon=ft.icons.EXPLORE_OUTLINED, 
-                                    selected_icon=ft.icons.EXPLORE,
-                                     label="task"),
-
-            ft.NavigationDestination(
-                icon=ft.icons.SETTINGS_OUTLINED,
-                selected_icon=ft.icons.SETTINGS,
-                label="setting",
-            ),
-        ],
+            ft.NavigationDestination(icon=ft.icons.EXPLORE_OUTLINED,selected_icon=ft.icons.EXPLORE,label="task"),
+            ft.NavigationDestination(icon=ft.icons.SETTINGS_OUTLINED,selected_icon=ft.icons.SETTINGS,label="setting"),
+                    ],
+        bgcolor=Bgcolor,
         on_change=on_change_navi
     ) 
 
@@ -67,11 +82,7 @@ def main(page: ft.Page):
         page.client_storage.set("Mobile",SETTING['MOBILE'])
         #再読み込み対策
         if not page.route == "/":
-            time.sleep(0.2)
-            page.views.clear()
-            load_setting()
-            page.views.append(create_setting())
-            page.update()
+            reload()
 
     CHECKBOX = ft.Checkbox(label="   モバイル表示", value=SETTING['MOBILE'],on_change=mobile_change)
     
@@ -87,42 +98,29 @@ def main(page: ft.Page):
             page.client_storage.remove("SavePass")
         page.client_storage.set("IsSave",SETTING['ISSAVE'])
         #再読み込み対策
-        time.sleep(0.2)
-        page.views.clear()
-        load_setting()
-        page.views.append(create_setting())
-        page.update()
+        reload()
        
     auto_login_switch = ft.Switch(label="自動ログイン", value=SETTING['ISSAVE'],on_change=auto_login_change)
     
     def create_home():      
         nonlocal SETTING
-        if sys.platform == "linux":
-            wid = 275
-        else:
-            wid = 475
-        des1 = ft.Text("本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました",width=wid,
-                            size=11)
-        des2 = ft.Text("現在、千葉工業大学のみ対応しています",width=wid,
-                            size=11)
-        #des2 = ft.Text("スマートフォンでも快適に使えるようにすることを目標に作られました",size=11)
         layout = [
                     ft.Column([
-                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
-                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Text(""),
+                    ft.Text(""),
                     ft.Row([ft.Image(src=f"/icon.png",width=50,height=50),
-                                     ft.Text(value="Monaba", color="green",size=40,weight="BOLD"),ft.Text("          ")],alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text(value="manabaから未提出課題を出力します")],alignment=ft.MainAxisAlignment.CENTER),
+                            ft.Text(value="Monaba", color="green",size=40,weight="BOLD"),ft.Text("          ")],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Container(content=ft.Text("manabaから未提出課題を出力します"),margin=15,alignment=ft.alignment.center),
                     ft.Row([ERROR],alignment=ft.MainAxisAlignment.CENTER),     
                     ft.Row([USER],alignment=ft.MainAxisAlignment.CENTER), 
                     ft.Row([PASS],alignment=ft.MainAxisAlignment.CENTER),      
                     ft.Row([CHECKBOX,ft.ElevatedButton("ログイン", on_click=login_clicked)],alignment=ft.MainAxisAlignment.CENTER),     
                     ft.Row([ft.Text(value=f"                                              platform: {sys.platform}  ver.{version}")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     ft.Text(""),
-                    ft.Row([des1],alignment=ft.MainAxisAlignment.CENTER), 
-                    ft.Row([des2],alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text("contact:erde.ena15@gmail.com"),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.CENTER),
-                    ft.Row([ft.Text("")],alignment=ft.MainAxisAlignment.CENTER), 
+                    ft.Container(content=ft.Text("本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました\n現在、千葉工業大学のみ対応しています",width=500),
+                    margin=15,alignment=ft.alignment.center),
+                    ft.Row([ft.Text("contact:erde.ena15@gmail.com"),],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Text(""),
                     ft.Row([ft.Text("© erde.ena15  2024")],alignment=ft.MainAxisAlignment.CENTER), 
                     ])     
                  ]
@@ -168,8 +166,25 @@ def main(page: ft.Page):
             dlg_modal.open = False
             page.update()
             page.go("/task")
-            
+
     def create_task():      
+        dt_now = datetime.datetime.now()
+        str = dt_now.strftime('この内容は%Y年%m月%d日 %H:%M:%Sに取得された情報です\n内容が古い場合は右の更新ボタンを押してください')
+        
+        if page.platform_brightness.name == "DARK":
+            Color = ft.colors.with_opacity(0.05, "#007000")
+            Bgcolor = ft.colors.with_opacity(1.00, "#001800")
+        else:
+            Color = ft.colors.GREEN_50
+            Bgcolor = ft.colors.GREEN_100
+        Navi.bgcolor = Bgcolor
+        def button_clicked(e):
+            dlg_title.value = "loading"
+            page.go("/loading")
+            time.sleep(0.1)
+            page.go("/task")    
+        
+        b = ft.IconButton(icon=ft.icons.AUTORENEW, on_click=button_clicked,)
         
         def get_detail(e):
             dlg_title.value = "loading"
@@ -185,81 +200,114 @@ def main(page: ft.Page):
             else:
                 page.go("/detail")
 
-        print("データ取得中")
-        X = Userdata.scraping_manaba()
+        try:
+            X = Userdata.reload_data()
+            if X == -1:
+                ERROR.value = "セッション切れのため再ログインが必要です"
+                page.go("/")
+        except NameError:
+            print("データ取得中")
+            X = Userdata.scraping_manaba()
+
         nonlocal SETTING 
         ROWS = []
+        
         if SETTING['MOBILE'] == True:
-            for D in range(len(X[0])):
-                tit = ft.DataCell(ft.Text(f"{X[1][D]}",size=11,weight="BOLD"),on_tap=get_detail,data=D)
-                CELLS = [
-                            tit,
-                            ft.DataCell(ft.Text(f"{X[2][D]}",size=11,weight="BOLD")),
-                            ft.DataCell(ft.Text(f"{X[4][D]}",size=11,weight="BOLD")),
-                        ]               
-                ROWS.append(ft.DataRow(cells = CELLS))
-            layout = [                    
-                    ft.AppBar(title = ft.Text("未提出課題"), bgcolor=ft.colors.SURFACE_VARIANT),    
-                    ft.Container(
-                        ft.DataTable(
-                                    border=ft.border.all(2, "green"),
-                                    border_radius=10,
-                                    data_row_max_height=55,
-                                    column_spacing=5,
-                                    horizontal_margin=1,
-                                    vertical_lines = ft.border.BorderSide(1,"GREY"),
-                                    columns = [
-                                    ft.DataColumn(ft.Text("タイトル",size=20,)),
-                                    ft.DataColumn(ft.Text("教科",size=20)),
-                                    ft.DataColumn(ft.Text("終了日",size=20)),
-                                            ],
-                                    rows = ROWS,
-                                    ),
-                    margin=10,
-                    ),
-                    Navi,                
-                 ]
-        else:
-            for D in range(len(X[0])):
-                tit = ft.DataCell(ft.Text(f"{X[1][D]}"),on_tap=get_detail,data=D)
-                CELLS = [
-                            ft.DataCell(ft.Text(f"{X[0][D]}")),
-                            tit,
-                            ft.DataCell(ft.Text(f"{X[2][D]}")),
-                            ft.DataCell(ft.Text(f"{X[3][D]}")),
-                            ft.DataCell(ft.Text(f"{X[4][D]}")),
-                        ]              
-                ROWS.append(ft.DataRow(cells = CELLS))
-
-            layout = [                    
-                        ft.AppBar(title = ft.Text("未提出課題"), bgcolor=ft.colors.SURFACE_VARIANT),    
-                        ft.Row([ft.DataTable(
-                                    border=ft.border.all(2, "green"),
-                                    border_radius=10,
-                                    horizontal_margin = 10,
-                                    vertical_lines = ft.border.BorderSide(1,"GREY"),
-                                    columns = [
-                                    ft.DataColumn(ft.Text("タイプ",size=20)),
-                                    ft.DataColumn(ft.Text("タイトル",size=20)),
-                                    ft.DataColumn(ft.Text("教科",size=20)),
-                                    ft.DataColumn(ft.Text("開始日",size=20)),
-                                    ft.DataColumn(ft.Text("終了日",size=20)),
-                                            ],
-                                    rows = ROWS,
-                                    )
-                                ],alignment=ft.MainAxisAlignment.CENTER),                          
-                        Navi,               
+            if X == None:
+                layout = [ 
+                        ft.AppBar(title = ft.Text("未提出課題"), bgcolor=Bgcolor),ft.Text(""),ft.Text(""),
+                        ft.Container(ft.Row([ft.Text(str,size=11,width=280),b],spacing=0,alignment=ft.MainAxisAlignment.CENTER),margin=8),
+                        ft.Row([ft.Container(content=ft.Text("未提出課題はありません( ´∀｀)b",width=250),margin=15,alignment=ft.alignment.center,
+                                             padding=15,bgcolor=Color,border_radius=10,width=250)],alignment=ft.MainAxisAlignment.CENTER),
+                                             Navi]
+            else:
+                for D in range(len(X[0])):
+                    tit = ft.DataCell(ft.Text(f"{X[1][D]}",size=11,weight="BOLD"),on_tap=get_detail,data=D)
+                    CELLS = [
+                                tit,
+                                ft.DataCell(ft.Text(f"{X[2][D]}",size=11,weight="BOLD")),
+                                ft.DataCell(ft.Text(f"{X[4][D]}",size=11,weight="BOLD")),
+                            ]               
+                    ROWS.append(ft.DataRow(cells = CELLS))
+                layout = [                    
+                        ft.AppBar(title = ft.Text("未提出課題"), bgcolor=Bgcolor),    
+                        ft.Container(ft.Row([ft.Text(str,size=11,width=280),b],spacing=0),margin=8,),
+                        ft.Container(
+                            ft.DataTable(
+                                        border=ft.border.all(2, "green"),
+                                        border_radius=10,
+                                        data_row_max_height=55,
+                                        column_spacing=5,
+                                        horizontal_margin=1,
+                                        vertical_lines = ft.border.BorderSide(1,"GREY"),
+                                        columns = [
+                                        ft.DataColumn(ft.Text("タイトル",size=20,)),
+                                        ft.DataColumn(ft.Text("教科",size=20)),
+                                        ft.DataColumn(ft.Text("終了日",size=20)),
+                                                ],
+                                        rows = ROWS,
+                                        ),
+                        margin=10,
+                        ),
+                        Navi,                
                     ]
-            
+        else:
+            if X == None:
+                layout = [ 
+                        ft.AppBar(title = ft.Text("未提出課題"), bgcolor=Bgcolor),ft.Text(""),ft.Text(""),
+                        ft.Container(ft.Row([ft.Text(str,width=385),b],alignment=ft.MainAxisAlignment.CENTER),margin=10),
+                        ft.Row([ft.Container(content=ft.Text("未提出課題はありません( ´∀｀)b",width=250),margin=15,alignment=ft.alignment.center,
+                                             padding=15,bgcolor=Color,border_radius=10,width=250)],alignment=ft.MainAxisAlignment.CENTER),
+                                             Navi]
+            else:
+                for D in range(len(X[0])):
+                    tit = ft.DataCell(ft.Text(f"{X[1][D]}"),on_tap=get_detail,data=D)
+                    CELLS = [
+                                ft.DataCell(ft.Text(f"{X[0][D]}")),
+                                tit,
+                                ft.DataCell(ft.Text(f"{X[2][D]}")),
+                                ft.DataCell(ft.Text(f"{X[3][D]}")),
+                                ft.DataCell(ft.Text(f"{X[4][D]}")),
+                            ]              
+                    ROWS.append(ft.DataRow(cells = CELLS))
+
+                layout = [                    
+                            ft.AppBar(title = ft.Text("未提出課題"), bgcolor=Bgcolor),                       
+                            ft.Container(ft.Row([ft.Text(str),b],alignment=ft.MainAxisAlignment.CENTER),margin=10,),
+                            ft.Row([
+                                        ft.DataTable(
+                                        border=ft.border.all(2, "green"),
+                                        border_radius=10,
+                                        horizontal_margin = 10,
+                                        vertical_lines = ft.border.BorderSide(1,"GREY"),
+                                        columns = [
+                                        ft.DataColumn(ft.Text("タイプ",size=20)),
+                                        ft.DataColumn(ft.Text("タイトル",size=20)),
+                                        ft.DataColumn(ft.Text("教科",size=20)),
+                                        ft.DataColumn(ft.Text("開始日",size=20)),
+                                        ft.DataColumn(ft.Text("終了日",size=20)),
+                                                ],
+                                        rows = ROWS,
+                                        )
+                                    ],alignment=ft.MainAxisAlignment.CENTER),                          
+                            Navi,               
+                        ]
         return ft.View("/task",layout,scroll = "HIDDEN") 
 
     def create_loading():
         return ft.View("/loading")
     
     def create_setting():      
+        if page.platform_brightness.name == "DARK":
+            Bgcolor = ft.colors.with_opacity(1.00, "#001800")
+        else:
+            Bgcolor = ft.colors.GREEN_100
+        Navi.bgcolor = Bgcolor
+        log = "v1.2.8 : 取得時間確認機能と更新ボタン追加\nv1.2.0 : 詳細内容表示機能追加\nv1.1.0 : 自動ログイン追加\nv1.0.0 : 初期ビルド"
+        ab = f"ver.{version}\nplatform: {sys.platform}\ncontact:erde.ena15@gmail.com"
         nonlocal SETTING
         layout = [
-                    ft.AppBar(title = ft.Text("設定"), bgcolor=ft.colors.SURFACE_VARIANT), 
+                    ft.AppBar(title = ft.Text("設定"), bgcolor=Bgcolor), 
                     ft.Text(""),
                     ft.Row([auto_login_switch,ft.Text(""),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     ft.Row([ft.Text("         ログイン情報を端末のローカルに保存します",size=12),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
@@ -268,14 +316,21 @@ def main(page: ft.Page):
                     ft.Text(""),ft.Text(""),
                     ft.Row([ft.Text("-------------About-------------"),ft.Text("")],alignment=ft.MainAxisAlignment.CENTER),
                     ft.Text(""),
-                    ft.Row([ft.Text(f"ver.{version}"),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
-                    ft.Row([ft.Text(value=f"  platform: {sys.platform}"),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
-                    ft.Row([ft.Text("       contact:erde.ena15@gmail.com"),ft.Text(""),ft.Text("")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
+                    ft.Row([ft.Text(ab)],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Text(""),
+                    ft.Row([ft.Text("-------------Changelog-------------"),ft.Text("")],alignment=ft.MainAxisAlignment.CENTER),
+                    ft.Row([ft.Text(log)],alignment=ft.MainAxisAlignment.CENTER),
                     Navi,              
                     ]
-        return ft.View("/setting",layout)
+        return ft.View("/setting",layout,scroll = "HIDDEN")
     
     def create_detail():      
+        if page.platform_brightness.name == "DARK":
+            Bgcolor = ft.colors.with_opacity(1.00, "#001800")
+        else:
+            Bgcolor = ft.colors.GREEN_100
+        Navi.bgcolor = Bgcolor
+        
         def task_button(e):
             page.go("/task")
         
@@ -287,7 +342,7 @@ def main(page: ft.Page):
         if SETTING['MOBILE'] == True:
             
             layout = [
-                    ft.AppBar(title = ft.Text("詳細内容"), bgcolor=ft.colors.SURFACE_VARIANT), 
+                    ft.AppBar(title = ft.Text("詳細内容"), bgcolor=Bgcolor), 
                     ft.Column([ ft.Text(""),
                                 ft.Container(
                                             content=ft.Text(value=detail),
@@ -304,7 +359,7 @@ def main(page: ft.Page):
                     ]
         else:
             layout = [
-                    ft.AppBar(title = ft.Text("詳細内容"), bgcolor=ft.colors.SURFACE_VARIANT), 
+                    ft.AppBar(title = ft.Text("詳細内容"), bgcolor=Bgcolor), 
                     ft.Column([ ft.Text(""),
                                 ft.Row([ft.Container(
                                             content=ft.Text(value=detail),
@@ -320,6 +375,7 @@ def main(page: ft.Page):
                     Navi,   
                     ]
         return ft.View("/detail",layout,scroll = "HIDDEN")
+    
 
     def route_change(route):
         page.views.clear()
@@ -377,4 +433,4 @@ def main(page: ft.Page):
     page.update()
     page.go(page.route)
     
-ft.app(target=main,assets_dir="assets",view=ft.WEB_BROWSER)
+ft.app(target=main,assets_dir="assets")

@@ -99,6 +99,9 @@ class manaba_tool:
       #for url in urls:
         #urls_txt.append(url.text)
 
+      if (len(titles_txt)) == 0:
+        return None
+
       #各要素を2次元辞書,タプルにまとめる
       data =[]
       data.append(self.types_txt)
@@ -122,7 +125,7 @@ class manaba_tool:
       data['教科'] = subjects_txt
       data['開始日'] = dates_start_txt
       data['終了日'] = dates_finish_txt
-  '''
+  '''  
       return data
   
   def scraping_detail(self,number):
@@ -136,4 +139,15 @@ class manaba_tool:
     if de.isspace() == True or self.types_txt[number] == "アンケート":
       de = "詳細内容はありません"
     return de
+  
+  def reload_data(self): 
+    res = self.session.get(self.url_mytask)
+    self.SOUP = BeautifulSoup(res.text, "html.parser")
+    if not self.check_login() == 0:
+      print('セッションが切れています')
+      return -1
+    return self.scraping_manaba()
+
+
     
+
