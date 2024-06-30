@@ -178,11 +178,12 @@ def main(page: ft.Page):
             Color = ft.colors.GREEN_50
             Bgcolor = ft.colors.GREEN_100
         Navi.bgcolor = Bgcolor
+        
         def button_clicked(e):
-            dlg_title.value = "loading"
-            page.go("/loading")
-            time.sleep(0.1)
-            page.go("/task")    
+            page.views.clear()
+            PAGE=create_task()
+            page.views.append(PAGE)
+            page.update()
         
         b = ft.IconButton(icon=ft.icons.AUTORENEW, on_click=button_clicked,)
         
