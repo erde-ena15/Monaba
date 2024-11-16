@@ -1,5 +1,6 @@
 # Monaba
-<img src="https://github.com/user-attachments/assets/a22169ec-d6b1-4fa0-8206-7ba7db7e0fee" width="12%"/><br>
+<img src="https://github.com/user-attachments/assets/a22169ec-d6b1-4fa0-8206-7ba7db7e0fee" width="12%"/>
+<img src="https://github.com/user-attachments/assets/0a3c2fff-0b75-4ea1-ba8f-cd1b968ac149" width="50%"/><br>
 本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました  
 現在、androidのみ対応してます ios/pcの方は[monaba.net](https://monaba.net)へ  
 また、現時点で利用可能な大学は千葉工業大学のみです
