@@ -2,7 +2,7 @@
 <img src="https://github.com/user-attachments/assets/a22169ec-d6b1-4fa0-8206-7ba7db7e0fee" width="12%"/>
 <img src="https://github.com/user-attachments/assets/0a3c2fff-0b75-4ea1-ba8f-cd1b968ac149" width="50%"/><br>
 本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました  
-現在、androidのみ対応してます ios/pcの方は[monaba.net](https://monaba.net)へ  
+現在、androidのみ対応してます ios/pcの方はhttps://monaba.net へ<br>
 また、現時点で利用可能な大学は千葉工業大学のみです
 
 ## アプリ画面
@@ -16,7 +16,7 @@
 未提出一覧画面で課題のタイトルをタップすると課題の詳細内容も確認できます
 
 ## 自動ログイン方法
-ログイン完了後に、画面下のナビゲーションバーのsetting'を選択し、自動ログインのトグルを有効化するだけで、次回からIDとパスワードを入力せずにログインできます
+ログイン完了後に、画面下のナビゲーションバーの`setting`を選択し、自動ログインのトグルを有効化するだけで、次回からIDとパスワードを入力せずにログインできます
 
 ### Contact
 * [Twitter](https://twitter.com/erde_ena15)
