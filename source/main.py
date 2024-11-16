@@ -113,7 +113,7 @@ def main(page: ft.Page):
                     ft.Row([USER],alignment=ft.MainAxisAlignment.CENTER), 
                     ft.Row([PASS],alignment=ft.MainAxisAlignment.CENTER),      
                     ft.Row([CHECKBOX,ft.ElevatedButton("ログイン", on_click=login_clicked)],alignment=ft.MainAxisAlignment.CENTER),     
-                    ft.Row([ft.Text(value=f"                                              platform: {sys.platform}  ver.{version}")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
+                    ft.Row([ft.Text(value=f"                                              platform: {page.platform.value}  ver.{version}")],alignment=ft.MainAxisAlignment.SPACE_AROUND),
                     ft.Text(""),
                     ft.Container(content=ft.Text("本アプリはmanabaのUI調整を行ったり、自動ログインを実装することでスマートフォンでも快適に使えるようにすることを目標に作られました\n現在、千葉工業大学のみ対応しています",width=500),
                     margin=15,alignment=ft.alignment.center),
